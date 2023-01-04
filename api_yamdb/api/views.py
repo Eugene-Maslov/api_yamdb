@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 
-from .models import Categories, Genres, Titles
+from review.models import Categories, Genres, Titles
 from .permissions import IsAdminOrReadOnly
 from .serializers import CategoriesSerializer, GenresSerializer
 from .serializers import TitlesSerializer
