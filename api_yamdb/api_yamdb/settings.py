@@ -110,7 +110,6 @@ MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'review.User'
 
-
 # DRF settings
 
 #REST_FRAMEWORK = {
@@ -118,3 +117,7 @@ AUTH_USER_MODEL = 'review.User'
 #        'rest_framework.permissions.IsAdmin',
 #    ],
 #}
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
