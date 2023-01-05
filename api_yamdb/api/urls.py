@@ -3,6 +3,7 @@ from django.urls import include, path
 from rest_framework import routers
 
 from .views import CategoryViewSet, GenreViewSet, TitleViewSet
+from .views import registration, get_token
 
 app_name = 'api'
 
@@ -14,6 +15,8 @@ router.register(r'titles', TitleViewSet, basename='titles')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('auth/signup/', registration, name='registration'),
+    path('auth/token/', get_token, name='token')
 #    path('', include('djoser.urls')),
 #    path('', include('djoser.urls.jwt')),
 ]
