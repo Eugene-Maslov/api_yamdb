@@ -5,7 +5,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueValidator
 from review.models import Categories, Comment, Genres, Review, Titles, User
-
+from rest_framework.validators import UniqueTogetherValidator
 
 class CategoriesSerializer(serializers.ModelSerializer):
 
@@ -87,6 +87,12 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Review
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Review.objects.all(),
+                fields=('author', 'title')
+            )
+        ]
 
 
 class CommentSerializer(serializers.ModelSerializer):

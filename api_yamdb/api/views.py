@@ -9,8 +9,7 @@ from rest_framework.pagination import (LimitOffsetPagination,
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
-from review.models import (Categories, Comment, Genres, Review, Title, Titles,
-                           User)
+from review.models import Categories, Comment, Genres, Review, Titles, User
 
 from .permissions import IsAdminOrReadOnly, IsAdminOrSuper, IsAuthorOrReadOnly
 from .serializers import (CategoriesSerializer, CommentSerializer,
@@ -113,32 +112,33 @@ class UserViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     pagination_class = LimitOffsetPagination
-    permission_classes = (IsAuthorOrReadOnly, )
-    filter_backends = (SearchFilter,)
-    search_fields = ('author',)
-
-    def get_post(self):
-        return get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+    # permission_classes = (IsAuthorOrReadOnly, )
 
     def get_queryset(self):
-        return self.get_post().reviews
+        title_id = self.kwargs.get('title_id')
+        title = get_object_or_404(Titles, id=title_id)
+        return title.reviews.all()
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user, post=self.get_post())
+        title_id = self.kwargs.get('title_id')
+        title = get_object_or_404(Titles, id=title_id)
+        serializer.save(author=self.request.user, title=title)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    pagination_class = LimitOffsetPagination
-    permission_classes = (IsAuthorOrReadOnly, )
-    filter_backends = (SearchFilter,)
-    search_fields = ('author',)
-
-    def get_post(self):
-        return get_object_or_404(Review, pk=self.kwargs.get('review_id'))
-
-    def get_queryset(self):
-        return self.get_post().comments
+    # permission_classes = (IsAuthorOrReadOnly, )
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user, post=self.get_post())
+        title_id = self.kwargs.get('title_id')
+        title = get_object_or_404(Titles, id=title_id)
+        review_id = self.kwargs.get('review_id')
+        review = get_object_or_404(Review, id=review_id, title=title)
+        serializer.save(author=self.request.user, review=review)
+
+    def get_queryset(self):
+        title_id = self.kwargs.get('title_id')
+        title = get_object_or_404(Titles, id=title_id)
+        review_id = self.kwargs.get('review_id')
+        review = get_object_or_404(Review, id=review_id, title=title)
+        return Comment.objects.filter(review=review)
