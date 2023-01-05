@@ -26,6 +26,14 @@ class User(AbstractUser):
                             default='user',
                             max_length=50)
 
+    @property
+    def is_moderator(self):
+        return self.role == self.MODER
+
+    @property
+    def is_admin(self):
+        return self.role == self.ADMIN
+
 
 class Categories(models.Model):
     name = models.CharField(max_length=256)
