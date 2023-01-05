@@ -32,7 +32,6 @@ class TitlesSerializer(serializers.ModelSerializer):
         #fields = '__all__'
 
     def validate_year(self, value):
-        year = dt.date.today().year
-        if not value <= year:
+        if value > dt.date.today().year:
             raise serializers.ValidationError('Неверный год выпуска!')
         return value
