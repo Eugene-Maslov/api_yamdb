@@ -56,6 +56,9 @@ class Review(models.Model):
         db_index=True
     )
 
+    def __str__(self):
+        return self.text[:15]
+
 
 class Comment(models.Model):
     review = models.ForeignKey(
@@ -74,3 +77,6 @@ class Comment(models.Model):
         auto_now_add=True,
         db_index=True
     )
+
+    def __str__(self):
+        return self.text[:15]
