@@ -1,11 +1,11 @@
-from rest_framework import serializers
-from rest_framework.relations import SlugRelatedField
-from rest_framework.validators import UniqueValidator
-from rest_framework.exceptions import ValidationError
-from review.models import Categories, Genres, Titles, User
-
 import datetime as dt
 
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from rest_framework.relations import SlugRelatedField
+from rest_framework.validators import UniqueValidator
+from review.models import Categories, Comment, Genres, Review, Titles, User
+from rest_framework.validators import UniqueTogetherValidator
 
 class CategoriesSerializer(serializers.ModelSerializer):
 
@@ -60,15 +60,18 @@ class EditUserSerializer(serializers.ModelSerializer):
 
 class RegistrationSerializer(serializers.ModelSerializer):
     username = serializers.CharField(validators=[
-        UniqueValidator(queryset=User.objects.all())])
+            UniqueValidator(queryset=User.objects.all())
+        ]
+)
     email = serializers.EmailField(validators=[
-        UniqueValidator(queryset=User.objects.all())])
+            UniqueValidator(queryset=User.objects.all())
+        ])
 
-    def validate_username(self,value):
+    def validate_username(self, value):
         if value.lower() == 'me':
             raise ValidationError('"me" is not valid username')
         return value
-    
+
     class Meta:
         fields = ('username', 'email')
         model = User
@@ -81,3 +84,29 @@ class ConfirmRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('username', 'confirmation_code')
         model = User
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        read_only=True, slug_field='username'
+    )
+
+    class Meta:
+        fields = '__all__'
+        model = Review
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Review.objects.all(),
+                fields=('author', 'title')
+            )
+        ]
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        read_only=True, slug_field='username'
+    )
+
+    class Meta:
+        fields = '__all__'
+        model = Comment
