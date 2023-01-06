@@ -59,13 +59,8 @@ class EditUserSerializer(serializers.ModelSerializer):
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(validators=[
-            UniqueValidator(queryset=User.objects.all())
-        ]
-)
-    email = serializers.EmailField(validators=[
-            UniqueValidator(queryset=User.objects.all())
-        ])
+    username = serializers.CharField()
+    email = serializers.EmailField()
 
     def validate_username(self,value):
         if value.lower() == 'me':

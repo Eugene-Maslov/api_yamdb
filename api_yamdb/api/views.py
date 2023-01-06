@@ -57,17 +57,28 @@ class TitleViewSet(viewsets.ModelViewSet):
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
 def registration(request):
+    if User.objects.filter(username=request.data.get('username')).exists():
+        user = User.objects.filter(username=request.data.get('username'))
+        confirmation_code = default_token_generator.make_token(user)
+        send_mail(
+            subject="yamdb registration",
+            message=f'Your secret code {confirmation_code}',
+            from_email = None,
+            recipient_list=[user.email],
+        )
+        return Response(status=status.HTTP_200_OK)
     serializer = RegistrationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    user = get_object_or_404(User, username=serializer.validated_data['username'])
+    user = get_object_or_404(User,
+                             username=serializer.validated_data["username"])
     confirmation_code = default_token_generator.make_token(user)
     send_mail(
-        subject="yamdb registration",
-        message=f'Your secret code {confirmation_code}',
-        from_email = None,
-        recipient_list=[user.email],
-    )
+              subject="yamdb registration",
+              message=f'Your secret code {confirmation_code}',
+              from_email = None,
+              recipient_list=[user.email],
+            )
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
