@@ -28,24 +28,24 @@ class CreateListDestroyViewSet(mixins.CreateModelMixin,
 class CategoryViewSet(CreateListDestroyViewSet):
     queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
-    #permission_classes = (IsAdminOrReadOnly,)
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAdminOrReadOnly,)
+    #permission_classes = (AllowAny,)
     pagination_class = LimitOffsetPagination
 
 
 class GenreViewSet(CreateListDestroyViewSet):
     queryset = Genres.objects.all()
     serializer_class = GenresSerializer
-    #permission_classes = (IsAdminOrReadOnly,)
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAdminOrReadOnly,)
+    #permission_classes = (AllowAny,)
     pagination_class = LimitOffsetPagination
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Titles.objects.all()
     serializer_class = TitlesSerializer
-    #permission_classes = (IsAdminOrReadOnly,)
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAdminOrReadOnly,)
+    #permission_classes = (AllowAny,)
     pagination_class = LimitOffsetPagination
     
     genre = GenresSerializer(read_only=True, many=True)
@@ -68,7 +68,7 @@ def registration(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view()
+@api_view(["POST"])
 def get_token(request):
     serializer = ConfirmRegistrationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
