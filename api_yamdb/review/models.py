@@ -36,29 +36,39 @@ class User(AbstractUser):
         return self.role == self.ADMIN
 
 
-class Categories(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=256)
     slug = models.SlugField(unique=True)
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name_plural = "Categories"
 
     def __str__(self):
         return self.name
 
 
-class Genres(models.Model):
+class Genre(models.Model):
     name = models.CharField(max_length=256)
     slug = models.SlugField(unique=True)
+
+    class Meta:
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
 
 
-class Titles(models.Model):
+class Title(models.Model):
     name = models.CharField(max_length=256)
     year = models.IntegerField()
-    category = models.ForeignKey(Categories, related_name='category',
+    category = models.ForeignKey(Category, related_name='category',
                                  on_delete=models.SET_NULL, null=True)
-    genre = models.ManyToManyField(Genres, related_name='genre')
+    genre = models.ManyToManyField(Genre, related_name='genre')
     description = models.TextField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -66,7 +76,7 @@ class Titles(models.Model):
 
 class Review(models.Model):
     title = models.ForeignKey(
-        Titles,
+        Title,
         on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='Произведение'
