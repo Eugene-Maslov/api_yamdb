@@ -53,6 +53,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 
 @api_view(["POST"])
+@permission_classes([permissions.AllowAny])
 def registration(request):
     serializer = RegistrationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -69,6 +70,7 @@ def registration(request):
 
 
 @api_view(["POST"])
+@permission_classes([permissions.AllowAny])
 def get_token(request):
     serializer = ConfirmRegistrationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -76,7 +78,7 @@ def get_token(request):
     if default_token_generator.check_token(user,
                                            serializer.validated_data['confirmation_code']):
         token = AccessToken.for_user(user)
-        return Response({'token': str(token)}, status=status.HTTP_200_OK)
+        return Response({"token": str(token)}, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
