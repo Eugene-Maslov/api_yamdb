@@ -60,9 +60,12 @@ class EditUserSerializer(serializers.ModelSerializer):
 
 class RegistrationSerializer(serializers.ModelSerializer):
     username = serializers.CharField(validators=[
-        UniqueValidator(queryset=User.objects.all())])
+            UniqueValidator(queryset=User.objects.all())
+        ]
+)
     email = serializers.EmailField(validators=[
-        UniqueValidator(queryset=User.objects.all())])
+            UniqueValidator(queryset=User.objects.all())
+        ])
 
     def validate_username(self,value):
         if value.lower() == 'me':
@@ -77,4 +80,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
 class ConfirmRegistrationSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
     confirmation_code = serializers.CharField()
+
+    class Meta:
+        fields = ('username', 'confirmation_code')
+        model = User
 
