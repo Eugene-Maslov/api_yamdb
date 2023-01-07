@@ -41,7 +41,6 @@ class Category(models.Model):
     slug = models.SlugField(unique=True)
 
     class Meta:
-        ordering = ('name',)
         verbose_name_plural = "Categories"
 
     def __str__(self):
@@ -51,9 +50,6 @@ class Category(models.Model):
 class Genre(models.Model):
     name = models.CharField(max_length=256)
     slug = models.SlugField(unique=True)
-
-    class Meta:
-        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -66,9 +62,6 @@ class Title(models.Model):
                                  on_delete=models.SET_NULL, null=True)
     genre = models.ManyToManyField(Genre, related_name='genre')
     description = models.TextField(null=True, blank=True)
-
-    class Meta:
-        ordering = ('name',)
 
     def __str__(self):
         return self.name
