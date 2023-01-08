@@ -1,11 +1,10 @@
 import datetime as dt
-
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.relations import SlugRelatedField
-from rest_framework.validators import UniqueValidator
 from review.models import Category, Comment, Genre, Review, Title, User
 from rest_framework.validators import UniqueTogetherValidator
+
 
 class CategorySerializer(serializers.ModelSerializer):
 
@@ -50,33 +49,46 @@ class TitleSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(validators=[
-        UniqueValidator(queryset=User.objects.all())],
-        required=True,)
-    email = serializers.EmailField(validators=[
-        UniqueValidator(queryset=User.objects.all())])
+    username = serializers.RegexField(regex=r'^[\w.@+-]+$',
+                                      max_length=150,
+                                      required=True)
+    email = serializers.EmailField(max_length=254,
+                                   required=True)
 
     class Meta:
         fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'role')
         model = User
 
-
-class EditUserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'role')
-        read_only_field = ('role',)
-        model = User
+    def validate(self, data):
+        if User.objects.filter(email=data.get('email')).exists():
+            user = User.objects.get(email=data.get('email'))
+            if user.username != data.get('username'):
+                raise ValidationError('invalid email')
+        if User.objects.filter(username=data.get('username')).exists():
+            user = User.objects.get(username=data.get('username'))
+            if user.email != data.get('email'):
+                raise ValidationError('invalid username')
+        return data
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    username = serializers.CharField()
-    email = serializers.EmailField()
+    username = serializers.RegexField(regex=r'^[\w.@+-]+$',
+                                      max_length=150,
+                                      required=True)
+    email = serializers.EmailField(max_length=254)
 
-    def validate_username(self, value):
-        if value.lower() == 'me':
+    def validate(self, data):
+        if data.get('username').lower() == "me":
             raise ValidationError('"me" is not valid username')
-        return value
+        if User.objects.filter(email=data.get('email')).exists():
+            user = User.objects.get(email=data.get('email'))
+            if user.username != data.get('username'):
+                raise ValidationError('invalid email')
+        if User.objects.filter(username=data.get('username')).exists():
+            user = User.objects.get(username=data.get('username'))
+            if user.email != data.get('email'):
+                raise ValidationError('invalid username')
+        return data
 
     class Meta:
         fields = ('username', 'email')
@@ -84,7 +96,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
 class ConfirmRegistrationSerializer(serializers.ModelSerializer):
-    username = serializers.CharField()
+    username = serializers.RegexField(regex=r'^[\w.@+-]+$',
+                                      max_length=150,
+                                      required=True)
     confirmation_code = serializers.CharField()
 
     class Meta:

@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'rest_framework_simplejwt',
     'api',
     'review',
 ]
@@ -135,5 +136,4 @@ DEFAULT_FROM_EMAIL = 'admin@yamdb.com'
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=21),
-    "AUTH_HEADER_TYPES": ("Bearer",),
-}
+    "AUTH_HEADER_TYPES": ("Bearer",)}

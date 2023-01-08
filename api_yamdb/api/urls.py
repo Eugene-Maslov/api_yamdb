@@ -24,8 +24,8 @@ router_v1.register(r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comment
 
 urlpatterns = [
     path('v1/', include(router_v1.urls)),
-    path('auth/signup/', registration, name='registration'),
-    path('auth/token/', get_token, name='token')
+    path('v1/auth/signup/', registration, name='registration'),
+    path('v1/auth/token/', get_token, name='token')
 #    path('', include('djoser.urls')),
 #    path('', include('djoser.urls.jwt')),
 ]
