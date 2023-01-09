@@ -27,6 +27,9 @@ class User(AbstractUser):
                             default='user',
                             max_length=50)
 
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
+
     @property
     def is_moderator(self):
         return self.role == self.MODER
@@ -34,6 +37,9 @@ class User(AbstractUser):
     @property
     def is_admin(self):
         return self.role == self.ADMIN
+
+    class Meta:
+        ordering = ['id']
 
 
 class Category(models.Model):
