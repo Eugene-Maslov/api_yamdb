@@ -66,9 +66,6 @@ class TitleViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
 
-    genre = GenreSerializer(read_only=True, many=True)
-    category = CategorySerializer(read_only=True)
-
 
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
