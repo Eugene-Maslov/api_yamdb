@@ -80,6 +80,10 @@ class Review(models.Model):
         related_name='reviews',
         verbose_name='Произведение'
     )
+    text = models.TextField(
+        verbose_name='Текст отзыва',
+        max_length=300
+    )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -93,18 +97,14 @@ class Review(models.Model):
             MinValueValidator(1, message='Введите значение от 1 до 10')
         ]
     )
-    text = models.TextField(
-        verbose_name='Текст отзыва',
-        max_length=300
-    )
-    created = models.DateTimeField(
+    pub_date = models.DateTimeField(
         'Дата добавления',
         auto_now_add=True,
         db_index=True
     )
 
     class Meta:
-        ordering = ('-created',)
+        ordering = ('-pub_date',)
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
         constraints = [
@@ -125,23 +125,23 @@ class Comment(models.Model):
         related_name='comments',
         verbose_name='Отзыв'
     )
+    text = models.TextField(
+        verbose_name='Комментарий'
+    )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='comments',
         verbose_name='Автор'
     )
-    text = models.TextField(
-        verbose_name='Комментарий'
-    )
-    created = models.DateTimeField(
+    pub_date = models.DateTimeField(
         'Дата добавления',
         auto_now_add=True,
         db_index=True
     )
 
     class Meta:
-        ordering = ('-created',)
+        ordering = ('-pub_date',)
         verbose_name = "Комментарий к отзыву"
         verbose_name_plural = "Комментарии к отзыву"
 
