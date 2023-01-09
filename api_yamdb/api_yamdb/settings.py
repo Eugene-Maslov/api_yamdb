@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_simplejwt',
     'api',
-    'review',
+    'reviews',
 ]
 
 MIDDLEWARE = [
@@ -112,7 +112,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 
-AUTH_USER_MODEL = 'review.User'
+AUTH_USER_MODEL = 'reviews.User'
 
 # DRF settings
 
