@@ -4,7 +4,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.relations import SlugRelatedField
-from rest_framework.validators import UniqueTogetherValidator
 
 from reviews.models import Category, Comment, Genre, Review, Title, User
 
@@ -138,36 +137,10 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username'
     )
-    title = serializers.HiddenField(
-        default=TitleDefault()
-    )
 
     class Meta:
-        fields = '__all__'
+        fields = ('id', 'text', 'author', 'score', 'pub_date')
         model = Review
-        validators = [
-            UniqueTogetherValidator(
-                queryset=Review.objects.all(),
-                fields=('author', 'title')
-            )
-        ]
-
-    def validate(self, data):
-        if not 1 <= data['score'] <= 10:
-            raise serializers.ValidationError(
-                'Оценка должна быть от 1 до 10')
-        return data
-
-
-class CommentDefault:
-    requires_context = True
-
-    def __call__(self, serializer_field):
-        review_id = serializer_field.context['view'].kwargs.get('review_id')
-        return get_object_or_404(Review, id=review_id)
-
-    def __repr__(self):
-        return '%s()' % self.__class__.__name__
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -175,10 +148,7 @@ class CommentSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username'
     )
-    review = serializers.HiddenField(
-        default=CommentDefault()
-    )
 
     class Meta:
-        fields = '__all__'
+        fields = ('id', 'text', 'author', 'pub_date')
         model = Comment
