@@ -68,7 +68,7 @@ cd api_yamdb
 sqlite3.exe db.sqlite3 < data_import
 ```
 
-Запустить проект:
+Вернуться в bash и запустить проект:
 
 ```
 python manage.py runserver
