@@ -10,6 +10,7 @@ from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
+from api_yamdb.settings import YAMDB_EMAIL
 
 from reviews.models import Category, Genre, Review, Title, User
 from .permissions import IsAdminOrReadOnly, IsAdminOrSuper, IsAuthorOrModer
@@ -76,21 +77,11 @@ class TitleViewSet(viewsets.ModelViewSet):
 def registration(request):
     serializer = RegistrationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    if User.objects.filter(email=serializer.validated_data["email"]).exists():
-        user = User.objects.get(email=serializer.validated_data["email"])
-        confirmation_code = default_token_generator.make_token(user)
-        send_mail(
-            subject="yamdb registration",
-            message=f'Your secret code {confirmation_code}',
-            from_email=None,
-            recipient_list=[user.email])
-        return Response(status=status.HTTP_200_OK)
-    serializer.save()
-    user = User.objects.get(email=serializer.validated_data["email"])
+    user, new_user = User.objects.get_or_create(**serializer.validated_data)
     confirmation_code = default_token_generator.make_token(user)
-    send_mail(subject="yamdb registration",
+    send_mail(subject='yamdb registration',
               message=f'Your secret code {confirmation_code}',
-              from_email=None,
+              from_email=YAMDB_EMAIL,
               recipient_list=[user.email],
               )
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -110,7 +101,7 @@ def get_token(request):
         serializer.validated_data['confirmation_code']
     ):
         token = AccessToken.for_user(user)
-        return Response({"token": str(token)}, status=status.HTTP_200_OK)
+        return Response({'token': str(token)}, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

@@ -92,7 +92,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=254)
 
     def validate(self, data):
-        if data.get('username').lower() == "me":
+        if data.get('username').lower() == 'me':
             raise ValidationError('"me" is not valid username')
         if User.objects.filter(email=data.get('email')).exists():
             user = User.objects.get(email=data.get('email'))
