@@ -1,0 +1,8 @@
+﻿.open db.sqlite3;
+.import --csv --skip 1 ./static/data/category.csv reviews_category
+.import --csv --skip 1 ./static/data/comments.csv reviews_comment
+.import --csv --skip 1 ./static/data/genre.csv reviews_genre
+.import --csv --skip 1 ./static/data/genre_title.csv reviews_title_genre
+.import --csv --skip 1 ./static/data/review.csv reviews_review
+.import --csv --skip 1 ./static/data/titles.csv reviews_title
+.import --csv --skip 1 ./static/data/users.csv reviews_user

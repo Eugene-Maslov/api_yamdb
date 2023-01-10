@@ -28,6 +28,4 @@ urlpatterns = [
     path('v1/', include(router_v1.urls)),
     path('v1/auth/signup/', registration, name='registration'),
     path('v1/auth/token/', get_token, name='token')
-#    path('', include('djoser.urls')),
-#    path('', include('djoser.urls.jwt')),
 ]
