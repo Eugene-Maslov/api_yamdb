@@ -48,6 +48,7 @@ class Category(models.Model):
 
     class Meta:
         verbose_name_plural = "Categories"
+        ordering = ('id',)
 
     def __str__(self):
         return self.name
@@ -57,17 +58,23 @@ class Genre(models.Model):
     name = models.CharField(max_length=256)
     slug = models.SlugField(unique=True)
 
+    class Meta:
+        ordering = ('id',)
+
     def __str__(self):
         return self.name
 
 
 class Title(models.Model):
     name = models.CharField(max_length=256)
-    year = models.PositiveIntegerField()
+    year = models.PositiveIntegerField(db_index=True)
     category = models.ForeignKey(Category, related_name='category',
                                  on_delete=models.SET_NULL, null=True)
     genre = models.ManyToManyField(Genre, related_name='genre')
     description = models.TextField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('id',)
 
     def __str__(self):
         return self.name
