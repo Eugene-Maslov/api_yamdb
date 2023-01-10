@@ -120,17 +120,6 @@ class ConfirmRegistrationSerializer(serializers.ModelSerializer):
         model = User
 
 
-class TitleDefault:
-    requires_context = True
-
-    def __call__(self, serializer_field):
-        title_id = serializer_field.context['view'].kwargs.get('title_id')
-        return get_object_or_404(Title, id=title_id)
-
-    def __repr__(self):
-        return '%s()' % self.__class__.__name__
-
-
 class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         default=serializers.CurrentUserDefault(),
