@@ -3,7 +3,7 @@
 Проект представляет собой API для социальной сети оценок фильмов, книг и музыкальных произведений.
 
 ### Технологии:
-Python 3.7  
+Python 3.9  
 Django 3.2
 
 ### Как запустить проект:
@@ -21,19 +21,19 @@ cd api_yamdb
 Cоздать и активировать виртуальное окружение:
 
 ```
-python -m venv env
+python -m venv venv
 ```
 
 * Если у вас Linux/macOS
 
     ```
-    source env/bin/activate
+    source venv/bin/activate
     ```
 
 * Если у вас windows
 
     ```
-    source env/scripts/activate
+    source venv/scripts/activate
     ```
 
 ```
@@ -53,7 +53,7 @@ cd api_yamdb
 Выполнить миграции:
 
 ```
-python3 manage.py migrate
+python manage.py migrate
 ```
 
 Импортировать данные из файлов *.csv в базу данных проекта:
@@ -65,7 +65,7 @@ sqlite3.exe db.sqlite3 < data_import
 Запустить проект:
 
 ```
-python3 manage.py runserver
+python manage.py runserver
 ```
 
 ### Документация по эндпоинтам, запросам и ответам:
