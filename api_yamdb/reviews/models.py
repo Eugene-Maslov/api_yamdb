@@ -77,7 +77,7 @@ class Title(models.Model):
     description = models.TextField(null=True, blank=True)
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('category',)
 
     def __str__(self):
         return self.name
